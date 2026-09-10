@@ -29,12 +29,14 @@ class FlxInternalVideo extends hxvlc.openfl.Video
 			if (!FlxG.signals.focusLost.has(onFocusLost))
 				FlxG.signals.focusLost.add(onFocusLost);
 
-			#if (FLX_SOUND_SYSTEM && flixel >= version("5.9.0"))
+			#if FLX_SOUND_SYSTEM
+			#if (flixel >= version("5.9.0"))
 			if (!FlxG.sound.onVolumeChange.has(onVolumeChange))
 				FlxG.sound.onVolumeChange.add(onVolumeChange);
-			#elseif (FLX_SOUND_SYSTEM && flixel < version("5.9.0"))
+			#else
 			if (!FlxG.signals.postUpdate.has(onVolumeUpdate))
 				FlxG.signals.postUpdate.add(onVolumeUpdate);
+			#end
 			#end
 
 			onVolumeChange(#if FLX_SOUND_SYSTEM (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume #else 1 #end);
@@ -56,12 +58,14 @@ class FlxInternalVideo extends hxvlc.openfl.Video
 			if (!FlxG.signals.focusLost.has(onFocusLost))
 				FlxG.signals.focusLost.add(onFocusLost);
 
-			#if (FLX_SOUND_SYSTEM && flixel >= version("5.9.0"))
+			#if FLX_SOUND_SYSTEM
+			#if (flixel >= version("5.9.0"))
 			if (!FlxG.sound.onVolumeChange.has(onVolumeChange))
 				FlxG.sound.onVolumeChange.add(onVolumeChange);
-			#elseif (FLX_SOUND_SYSTEM && flixel < version("5.9.0"))
+			#else
 			if (!FlxG.signals.postUpdate.has(onVolumeUpdate))
 				FlxG.signals.postUpdate.add(onVolumeUpdate);
+			#end
 			#end
 
 			onVolumeChange(#if FLX_SOUND_SYSTEM (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume #else 1 #end);
@@ -79,12 +83,14 @@ class FlxInternalVideo extends hxvlc.openfl.Video
 		if (FlxG.signals.focusLost.has(onFocusLost))
 			FlxG.signals.focusLost.remove(onFocusLost);
 
-		#if (FLX_SOUND_SYSTEM && flixel >= version("5.9.0"))
+		#if FLX_SOUND_SYSTEM
+		#if (flixel >= version("5.9.0"))
 		if (FlxG.sound.onVolumeChange.has(onVolumeChange))
 			FlxG.sound.onVolumeChange.remove(onVolumeChange);
-		#elseif (FLX_SOUND_SYSTEM && flixel < version("5.9.0"))
+		#else
 		if (FlxG.signals.postUpdate.has(onVolumeUpdate))
 			FlxG.signals.postUpdate.remove(onVolumeUpdate);
+		#end
 		#end
 
 		super.dispose();
@@ -130,7 +136,7 @@ class FlxInternalVideo extends hxvlc.openfl.Video
 	@:noCompletion
 	private function onVolumeChange(vol:Float):Void
 	{
-		volume = Math.abs(vol * volumeAdjust);
+		volume = #if (FLX_SOUND_SYSTEM && flixel >= version("6.1.0")) FlxG.sound.applySoundCurve(vol * volumeAdjust) #else vol * volumeAdjust #end;
 	}
 
 	@:noCompletion
