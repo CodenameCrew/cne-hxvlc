@@ -142,9 +142,10 @@ class FlxInternalVideo extends hxvlc.openfl.Video
 	@:noCompletion
 	private function set_volumeAdjust(value:Float):Float
 	{
+		volumeAdjust = value;
 		onVolumeChange(#if FLX_SOUND_SYSTEM (FlxG.sound.muted ? 0 : 1) * FlxG.sound.volume #else 1 #end);
 
-		return volumeAdjust = value;
+		return value;
 	}
 }
 #end
